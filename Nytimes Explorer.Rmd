@@ -1,0 +1,164 @@
+---
+title: "Nytimes_Data exploration"
+output: html_document
+---
+
+```{r,warning=FALSE,fig.width=12,fig.height=12,cache=TRUE,echo=FALSE}
+setwd("C:/Users/jaycb/Desktop/NYtimes")
+library(ggplot2)
+library(data.table)
+library(dplyr)
+library(lubridate)
+library(knitr)
+Nyt<-fread("JayQuery_Metadata.csv")
+dim(Nyt)
+names(Nyt)
+#length(unique(Nyt$aid))
+#summary(Nyt)
+#print(Nyt$extracted_people[1])
+Nyt$publication_date<-sapply(Nyt$publication_date,function(x) strsplit(x,split = "T")[[1]][1])
+Nyt$publication_date<-ymd(Nyt$publication_date)
+Nyt$year<- year(Nyt$publication_date)
+Nyt$month<- month(Nyt$publication_date)
+
+number_ticks <- function(n) {function(limits) pretty(limits, n)}
+Nyt %>% group_by(year) %>% summarise(count=n()) %>% ggplot(aes(x=year,y=count)) +geom_line(col="blue",size=1)+scale_x_continuous(breaks=number_ticks(30))+theme(axis.text.x=element_text(angle=90, hjust=1))+ggtitle("count by year")
+Nyt %>% group_by(month) %>% summarise(count=n()) %>% ggplot(aes(x=month,y=count)) +geom_line(col="blue",size=1)+scale_x_continuous(breaks=number_ticks(12))+theme(axis.text.x=element_text(angle=90, hjust=1))+ggtitle("count by month")
+
+country_aid=fread("country_aid.csv")
+country_aid=as.data.frame(country_aid)
+country_aid$aid=NULL
+sums=rep(0,ncol(country_aid))
+for (c in 1:ncol(country_aid)){
+  x=countrylist[c]
+  sums[c]=sum(country_aid[,x])
+}
+
+countrylist=names(country_aid)
+aggr_df=as.data.frame(cbind(countrylist,sums))
+aggr_df$sums=as.numeric(as.character(aggr_df$sums))
+arrange(aggr_df,desc(sums))%>% head(20) %>% kable()
+
+
+
+
+```
+
+```{r}
+# processing country variable
+Nyt<-fread("JayQuery_Metadata.csv")
+Nyt$country<-sapply(Nyt$country,function(x) strsplit(x,split = ","))
+countrylist<-unique(unlist(Nyt$country))
+
+
+
+for (i in 1:length(countrylist))
+  {
+  if (grepl('[\\]', countrylist[i])){
+    countrylist[i]=NA
+  }
+}
+
+countrylist<-na.omit(countrylist)
+aid <- Nyt$aid
+#counts<-matrix(nrow=length(aid),ncol=length(countrylist))
+
+cnt<-matrix(rep(0,length(countrylist)),ncol = length(countrylist))
+#names(cnt)<-c(countrylist)
+for (a in 1:length(aid))
+  {
+    c_lis<-unlist(Nyt$country[a])
+    lis<-matrix(rep(0,length(countrylist)),ncol = length(countrylist))
+    #   for (i in 1:length(c_lis))
+    #     {
+    #     if (grepl('[\\]', c_lis[i]))
+    #     {
+    #     c_lis[i]=NA
+    #     }
+    #     }
+    # 
+    # c_lis<-na.omit(c_lis)
+        if (length(c_lis>0)) 
+          {
+            for (c in 1:length(c_lis))
+            {
+               for (cl in 1:length(countrylist))
+               {
+                      if (c_lis[c]==countrylist[cl] )
+                      {
+                       lis[cl]=1
+                      }
+                     
+              }
+            }
+        }  
+ 
+    cnt<-rbind(cnt,lis)
+    
+                       if (a %% 1000==0)
+                         {
+                         cat("Processed",a,"\n")
+                       }
+ 
+}    
+
+dim(cnt)
+country_aid<-as.data.frame(cnt)
+names(country_aid)<-countrylist
+country_aid=country_aid[2:nrow(country_aid),]
+country_aid$aid<-Nyt$aid
+write.csv(country_aid,"country_aid.csv",row.names = FALSE)
+```
+
+
+
+```{r}
+Nyt$extracted_organizations<-sapply(Nyt$extracted_organizations,function(x) strsplit(x,split = ","))
+orglist<-unique(unlist(Nyt$extracted_organizations))
+for (i in 1:length(orglist))
+  {
+  if (grepl('[\\]', orglist[i])){
+    orglist[i]=NA
+  }
+}
+
+orglist<-na.omit(orglist)
+
+cnt<-matrix(rep(0,length(orglist)),ncol = length(orglist))
+#names(cnt)<-c(orglist)
+for (a in 1:len(Nyt$aid))
+  {
+    c_lis<-unlist(Nyt$extracted_organizations[a])
+    lis<-matrix(rep(0,length(orglist)),ncol = length(orglist))
+        if (length(c_lis>0)) 
+          {
+            for (c in 1:length(c_lis))
+            {
+               for (cl in 1:length(orglist))
+               {
+                      if (c_lis[c]==orglist[cl] )
+                      {
+                       lis[cl]=1
+                      }
+                     
+              }
+            }
+        }  
+ 
+    cnt<-rbind(cnt,lis)
+    
+                       if (a %% 1000==0)
+                         {
+                         cat("Processed",a,"\n")
+                       }
+ 
+}    
+
+dim(cnt)
+org_aid<-as.data.frame(cnt)
+names(org_aid)<-orglist
+org_aid$aid<-Nyt$aid[1:nrow(cnt)]
+write.csv(org_aid,"org_aid.csv",row.names = FALSE)
+
+```
+
