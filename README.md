@@ -1,4 +1,4 @@
-# &nbsp; &nbsp;NYtimes corpus Analysis  
+# &nbsp; &nbsp; NYtimes corpus Analysis  (In progress)
 
 ## College of Media, University of Illinois at Urbana Champaign
 
@@ -9,17 +9,10 @@
 #### Repository for performing Named Entity Recognition,Topic Modeling ,Regression and Trend analysis on NY times news articles.
 
 ### Back ground:
-#### Public sentiment/opinion about privacy ,secrecy has always been ambiguous ,for example in the incident of exposing a matter some people see it as a privacy matter which can be private where as others think of something is being hidden and the secret should be revealed to public. In real world public sentiment about Privacy and Secrecy can be overlapping or disjoint  so our study involves researching  three majors incidents "Ashley Madison Dating Website Hacking", "Celebrity Nude Photo Hacking", "Edward Snowden NSA leaks".Each of these incidents have different levels of overlapping in case of "Edward Snowden NSA leaks" the analysis revealed that the public treated him as hero because he exposed the NSA secret surveillance where as he is a traitor for revealing national secrets according to the government/law ,so no clear demarcation between Privacy and Secrecy w.r.to the public sentiment.Where as for the 'Ashley Madison Dating Website Hacking' majority of the public sentiment is towards the Secrecy because people think that extra martial affairs are more of hiding a secret to a private matter.We aim to distinguish the sentiment in different situations by using Machine Learning and Text Mining and develop a solution that can categorize tweets into one of the three classes "Privacy","Secrecy","Other" and thus analyze public sentiment using the machine generated classes.
+#### Immigration has always been a topic of interest to many,we may consider Immigration as a single topic but in reality there exists many sub-topics that form association with immigration such as Jobs,Politics,Economy,Time Period,International Interests,Law & Justice,Travel etc., This project is about studying the immigration in detail by considering sub topics as mentioned.For each of the sub topic we identify the influential factors such as economic ,political,social etc., by performing analysis w.r.to time 
 
-### Workflow template
-![workflow](https://github.com/bandjay/Twitter-Analysis/blob/master/twitter.png)
+#### There are two steps in this study 1) Topical modelling of News articles into different sub-topics using text mining techniques, 2) Analysis on each sub-topic. Currently working on Topical modelling step using LDA , TopMine and Named entity recognition to extract Person,Location attributes in the news.
+​
+#### Below is the workflow for the project
 
-#### Above workflow is the same for all three incidents and individual analysis are below
-[[Ashley Madison Incident Analysis](https://github.com/bandjay/Twitter-Analysis/blob/master/Ashely_Analysis.Rmd)]
-[[Celebrity Nude Photo Hack Analysis](https://github.com/bandjay/Twitter-Analysis/blob/master/Celeb%20photo%20hack_Analysis.Rmd)]
-[[Snowden-NSA Hacking Analysis](https://github.com/bandjay/Twitter-Analysis/blob/master/Snowden_Analysis.Rmd)]
-#### DATA
-[[Datasets](https://drive.google.com/drive/folders/0B0u3IvGq58oqNFFZWVpPTTFOWTQ)]
-
-
-
+![workflow](https://github.com/bandjay/NYtimes/blob/master/NYtimes.png)
